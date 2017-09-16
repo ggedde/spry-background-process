@@ -1,0 +1,21 @@
+{
+    "name": "ggedde/spry-background-process",
+    "description": "Provider for Spry Background Processes",
+    "type": "SpryProvider",
+    "require": {
+        "php": ">=5.4.0",
+        "cocur/background-process": "~0.7.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ggedde",
+            "email": "ggeddedev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Spry\\SpryProvider\\": "src/"
+        }
+    }
+}
