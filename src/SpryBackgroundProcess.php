@@ -30,7 +30,7 @@ class SpryBackgroundProcess
     {
         $args = array_merge([
             'controller' => '',
-            'input' => []
+            'params' => []
         ], $args);
 
         $autoloader = self::getAutoloader();
@@ -42,12 +42,19 @@ class SpryBackgroundProcess
 
         if(!empty($args['controller']))
         {
-            $cmd_composer = "include '".$autoloader."';";
-            $cmd_spry = "Spry\\Spry::run('".Spry::get_config_file()."', '".$args['controller']."');";
-            $cmd_input = json_encode($args['input']);
+            if(!Spry::controller_exists($args['controller']))
+            {
+                Spry::stop(5016, null, $args['controller']); // Controller Not Found
+            }
 
-            $command = 'echo \''.$cmd_input.'\' | php -r "'.$cmd_composer.$cmd_spry.'"';
+            $args['controller'] = addslashes($args['controller']);
 
+            $args['config'] = Spry::get_config_file();
+
+            $cmd_composer = "include '".$autoloader."';define('SPRY_DIR', '".SPRY_DIR."');";
+            $cmd_spry = "Spry\\Spry::run('".addslashes(json_encode($args))."');";
+
+            $command = 'php -r "'.$cmd_composer.$cmd_spry.'"';
             $command = str_replace(' ', escapeshellcmd(" "), $command);
 
             $process = new BackgroundProcess($command);
@@ -84,6 +91,13 @@ class SpryBackgroundProcess
             return ($process->isRunning() ? 1 : 0);
         }
 
+        // Unkown Error from Background Process
+        // Log it but don't exit the script
+        if(!empty(Spry::config()->response_codes[5062]['en']))
+        {
+            Spry::log(Spry::config()->response_codes[5062]['en'].' - createFromPID('.$pid.')');
+        }
+
         return null;
     }
 
@@ -102,7 +116,14 @@ class SpryBackgroundProcess
     {
         if($process = BackgroundProcess::createFromPID($pid))
         {
-            return $process->stop();
+            return ($process->stop() ? 1 : 0);
+        }
+
+        // Unkown Error from Background Process
+        // Log it but don't exit the script
+        if(!empty(Spry::config()->response_codes[5062]['en']))
+        {
+            Spry::log(Spry::config()->response_codes[5062]['en'].' - createFromPID('.$pid.')');
         }
 
         return null;
@@ -125,8 +146,22 @@ class SpryBackgroundProcess
         {
             if($process->isRunning())
             {
-                return $process->stop();
+                return ($process->stop() ? 1 : 0);
             }
+
+            // Unkown Error from Background Process
+            // Log it but don't exit the script
+            if(!empty(Spry::config()->response_codes[5062]['en']))
+            {
+                Spry::log(Spry::config()->response_codes[5062]['en'].' - isRunning('.$pid.')');
+            }
+        }
+
+        // Unkown Error from Background Process
+        // Log it but don't exit the script
+        if(!empty(Spry::config()->response_codes[5062]['en']))
+        {
+            Spry::log(Spry::config()->response_codes[5062]['en'].' - createFromPID('.$pid.')');
         }
 
         return null;
