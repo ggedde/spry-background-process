@@ -94,7 +94,7 @@ class SpryBackgroundProcess
 
     public static function getHash($pid=0)
     {
-        if(in_array(strtoupper(PHP_OS), ['LINUX', 'FREEBSD', 'DARWIN'])
+        if(in_array(strtoupper(PHP_OS), ['LINUX', 'FREEBSD', 'DARWIN']))
         {
             if($hash = shell_exec(sprintf('ps -o lstart=,command= %d', $pid)))
             {
@@ -205,7 +205,7 @@ class SpryBackgroundProcess
                 return 0;
             }
         }
-        
+
         if($process = BackgroundProcess::createFromPID($pid))
         {
             if($process->isRunning())
