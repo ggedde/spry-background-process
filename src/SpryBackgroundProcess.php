@@ -48,12 +48,10 @@ class SpryBackgroundProcess
                 Spry::stop(5016, null, $args['controller']); // Controller Not Found
             }
 
-            $args['controller'] = addslashes($args['controller']);
-
             $args['config'] = Spry::get_config_file();
 
             $cmd_composer = "include '".$autoloader."';define('SPRY_DIR', '".SPRY_DIR."');";
-            $cmd_spry = "Spry\\Spry::run('".addslashes(json_encode($args))."');";
+            $cmd_spry = "Spry\\Spry::run('".base64_encode(json_encode($args))."');";
 
             $command = 'php -r "'.$cmd_composer.$cmd_spry.'"';
             $command = str_replace(' ', escapeshellcmd(" "), $command);
