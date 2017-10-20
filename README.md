@@ -8,6 +8,7 @@ Background Processes - https://github.com/cocur/background-process
 * PHP 5.4^
 * PHP with cli
 * function "shell_exec()" available.
+* Spry-Core https://github.com/ggedde/spry-core
 
 ## Usage
 
