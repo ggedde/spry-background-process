@@ -38,13 +38,13 @@ class SpryBackgroundProcess
         }
 
         if (!empty($args['controller'])) {
-            if (!Spry::controller_exists($args['controller'])) {
+            if (!Spry::controllerExists($args['controller'])) {
                 Spry::stop(5016, null, $args['controller']); // Controller Not Found
             }
 
-            $args['config'] = Spry::get_config_file();
+            $args['config'] = Spry::getConfigFile();
 
-            $cmdComposer = "include '".$autoloader."';define('SPRY_DIR', '".SPRY_DIR."');";
+            $cmdComposer = "include '".$autoloader."';";
             $cmdSpry = "Spry\\Spry::run('".base64_encode(json_encode($args))."');";
 
             $command = 'php -r "'.$cmdComposer.$cmdSpry.'"';
