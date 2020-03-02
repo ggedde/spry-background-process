@@ -34,12 +34,12 @@ class SpryBackgroundProcess
         $autoloader = self::getAutoloader();
 
         if (empty($autoloader)) {
-            Spry::stop(5061);
+            Spry::stop(561);
         }
 
         if (!empty($args['controller'])) {
             if (!Spry::controllerExists($args['controller'])) {
-                Spry::stop(5016, null, $args['controller']); // Controller Not Found
+                Spry::stop(516, null, $args['controller']); // Controller Not Found
             }
 
             $args['config'] = Spry::getConfigFile();
@@ -58,7 +58,7 @@ class SpryBackgroundProcess
             $hash = self::getHash($pid);
 
             if (empty($pid)) {
-                Spry::stop(5060);
+                Spry::stop(560);
             }
 
             if ($args['hash']) {
