@@ -19,17 +19,22 @@ class SpryBackgroundProcess
     /**
      * Creates a background Process calling a Spry Component.
      *
-     * @param array $args
+     * @param string     $controller
+     * @param array|null $params
+     * @param array|null $meta
+     * @param array|null $config
      *
      * @return int|array
      */
-    public static function create($args = [])
+    public static function create($controller, $params = null, $meta = null, $config = null)
     {
-        $args = array_merge([
-            'controller' => '',
-            'params' => [],
-            'hash' => false,
-        ], $args);
+        $args = [
+            'controller' => $controller,
+            'process' => true,
+            'params' => $params,
+            'meta' => $meta,
+            'config' => $config,
+        ];
 
         $autoloader = self::getAutoloader();
 
@@ -61,11 +66,7 @@ class SpryBackgroundProcess
                 Spry::stop(60);
             }
 
-            if ($args['hash']) {
-                return ['pid' => $pid, 'hash' => $hash];
-            }
-
-            return $pid;
+            return (object) ['pid' => $pid, 'hash' => $hash];
         }
 
         return null;
@@ -113,9 +114,7 @@ class SpryBackgroundProcess
 
         // Unkown Error from Background Process
         // Log it but don't exit the script
-        if (!empty(Spry::config()->response_codes[5062])) {
-            Spry::log(Spry::config()->response_codes[5062].' - createFromPID('.$pid.')');
-        }
+        Spry::log(Spry::response(false, 62)->messages[0].' - createFromPID('.$pid.')');
 
         return null;
     }
@@ -135,9 +134,7 @@ class SpryBackgroundProcess
 
         // Unkown Error from Background Process
         // Log it but don't exit the script
-        if (!empty(Spry::config()->response_codes[5062])) {
-            Spry::log(Spry::config()->response_codes[5062].' - createFromPID('.$pid.')');
-        }
+        Spry::log(Spry::response(false, 62)->messages[0].' - createFromPID('.$pid.')');
 
         return null;
     }
@@ -162,9 +159,7 @@ class SpryBackgroundProcess
             if ($getHash !== $hash) {
                 // Unkown Error from Background Process
                 // Log it but don't exit the script
-                if (!empty(Spry::config()->response_codes[5062])) {
-                    Spry::log(Spry::config()->response_codes[5062].' - Hash does not match.');
-                }
+                Spry::log(Spry::response(false, 62)->messages[0].' - Hash does not match.');
 
                 return 0;
             }
@@ -177,16 +172,12 @@ class SpryBackgroundProcess
 
             // Unkown Error from Background Process
             // Log it but don't exit the script
-            if (!empty(Spry::config()->response_codes[5062])) {
-                Spry::log(Spry::config()->response_codes[5062].' - isRunning('.$pid.')');
-            }
+            Spry::log(Spry::response(false, 62)->messages[0].' - isRunning('.$pid.')');
         }
 
         // Unkown Error from Background Process
         // Log it but don't exit the script
-        if (!empty(Spry::config()->response_codes[5062])) {
-            Spry::log(Spry::config()->response_codes[5062].' - createFromPID('.$pid.')');
-        }
+        Spry::log(Spry::response(false, 62)->messages[0].' - createFromPID('.$pid.')');
 
         return null;
     }
