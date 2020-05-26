@@ -30,6 +30,7 @@ class SpryBackgroundProcess
     {
         $args = [
             'config' => $config,
+            'cron' => Spry::isCron(),
             'controller' => $controller,
             'meta' => $meta,
             'params' => $params,
