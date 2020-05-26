@@ -29,11 +29,11 @@ class SpryBackgroundProcess
     public static function create($controller, $params = null, $meta = null, $config = null)
     {
         $args = [
-            'controller' => $controller,
-            'process' => true,
-            'params' => $params,
-            'meta' => $meta,
             'config' => $config,
+            'controller' => $controller,
+            'meta' => $meta,
+            'params' => $params,
+            'process' => true,
         ];
 
         $autoloader = self::getAutoloader();
@@ -47,7 +47,9 @@ class SpryBackgroundProcess
                 Spry::stop(16, null, null, $args['controller']); // Controller Not Found
             }
 
-            $args['config'] = Spry::getConfigFile();
+            if (is_null($args['config'])) {
+                $args['config'] = Spry::getConfigFile();
+            }
 
             $cmdComposer = "include '".$autoloader."';";
             $cmdSpry = "Spry\\Spry::run('".base64_encode(json_encode($args))."');";
