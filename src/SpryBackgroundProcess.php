@@ -24,7 +24,7 @@ class SpryBackgroundProcess
      * @param array|null $meta
      * @param array|null $config
      *
-     * @return int|array
+     * @return object|null
      */
     public static function create($controller, $params = null, $meta = null, $config = null)
     {
@@ -80,7 +80,7 @@ class SpryBackgroundProcess
      *
      * @param int $pid
      *
-     * @return int|null
+     * @return string
      */
     public static function getHash($pid = 0)
     {
@@ -99,20 +99,20 @@ class SpryBackgroundProcess
      * @param int    $pid
      * @param string $hash
      *
-     * @return int|null
+     * @return bool|null
      */
     public static function isRunning($pid = 0, $hash = '')
     {
         if ($hash) {
             if (strval($hash) === self::getHash($pid)) {
-                return 1;
+                return true;
             }
 
-            return 0;
+            return false;
         }
 
         if ($process = BackgroundProcess::createFromPID($pid)) {
-            return $process->isRunning() ? 1 : 0;
+            return $process->isRunning() ? true : false;
         }
 
         // Unkown Error from Background Process
@@ -132,7 +132,7 @@ class SpryBackgroundProcess
     public static function stop($pid = 0)
     {
         if ($process = BackgroundProcess::createFromPID($pid)) {
-            return $process->stop() ? 1 : 0;
+            return $process->stop() ? true : false;
         }
 
         // Unkown Error from Background Process
@@ -156,7 +156,7 @@ class SpryBackgroundProcess
             $getHash = self::getHash($pid);
 
             if (!$getHash) {
-                return 1;
+                return true;
             }
 
             if ($getHash !== $hash) {
@@ -164,13 +164,13 @@ class SpryBackgroundProcess
                 // Log it but don't exit the script
                 Spry::log(Spry::response(false, 62)->messages[0].' - Hash does not match.');
 
-                return 0;
+                return false;
             }
         }
 
         if ($process = BackgroundProcess::createFromPID($pid)) {
             if ($process->isRunning()) {
-                return $process->stop() ? 1 : 0;
+                return $process->stop() ? true : false;
             }
 
             // Unkown Error from Background Process
